@@ -3,6 +3,7 @@
 
   const showModal = ref(false)
   const newNote = ref('')
+  const errorMessage = ref('')
   const notes = ref([])
 
 function getRandomColor() {
@@ -11,6 +12,10 @@ function getRandomColor() {
 }
   
   const addNote = () => {
+    if (newNote.value.length < 1) {
+      errorMessage.value = 'Please enter a note'
+      return
+    }
     notes.value.push({
       id: Math.floor(Math.random() * 100000000),
       text: newNote.value,
@@ -19,6 +24,7 @@ function getRandomColor() {
     });
     newNote.value = '';
     showModal.value = false;
+    errorMessage.value = '';
   }
 </script>
 
@@ -27,6 +33,7 @@ function getRandomColor() {
     <div class="overlay" v-if="showModal">
       <div class="modal">
         <textarea v-model="newNote" name="notes" id="notes" cols="30" rows="10">{{newNote}}</textarea>
+        <p v-if="errorMessage">{{errorMessage}}</p>
         <button @click="addNote()">Add Note</button>
         <button class="close" @click="showModal = false">Close</button>
       </div>
@@ -144,5 +151,11 @@ function getRandomColor() {
   .modal .close {
     background-color: rgb(193, 15, 15);
     margin-top: 7;
+  }
+
+  .modal p {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
   }
 </style>
